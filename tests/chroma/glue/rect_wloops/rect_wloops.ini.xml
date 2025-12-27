@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<chroma>
+  <Param>
+    <nrow>4 4 4 8</nrow>
+    <RectWLoops>
+      <t_dir>3</t_dir>
+      <z_dir>2</z_dir>
+      <L_max>3</L_max>
+      <R_max>2</R_max>
+      <out_file>rect_wloops_py.h5</out_file>
+    </RectWLoops>
+  </Param>
+  <Cfg>
+    <cfg_type>WEAK_FIELD</cfg_type>
+    <cfg_file>dummy</cfg_file>
+  </Cfg>
+</chroma>

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+
+<chroma>
+  <ProgramInfo>
+    <code_version>
+      <chroma>3.44.0</chroma>
+      <qdp>1.46.0</qdp>
+      <basePrecision>64</basePrecision>
+    </code_version>
+    <run_date>27 Dec 25 11:23:47 PST</run_date>
+    <Setgeom>
+      <latt_size>4 4 4 8</latt_size>
+      <logical_size>1 1 1 1</logical_size>
+      <subgrid_size>4 4 4 8</subgrid_size>
+      <total_volume>512</total_volume>
+      <subgrid_volume>512</subgrid_volume>
+    </Setgeom>
+  </ProgramInfo>
+  <RNG>
+    <Seed>
+      <elem>1835</elem>
+      <elem>1656</elem>
+      <elem>1907</elem>
+      <elem>1774</elem>
+    </Seed>
+  </RNG>
+  <Config_info><weak_field>
+</weak_field>
+
+  </Config_info>
+  <Observables>
+    <w_plaq>0.994764948925992</w_plaq>
+    <s_plaq>0.99480100514486</s_plaq>
+    <t_plaq>0.994728892707124</t_plaq>
+    <plane_01_plaq>0.994752542728879</plane_01_plaq>
+    <plane_02_plaq>0.995051804054425</plane_02_plaq>
+    <plane_12_plaq>0.994598668651276</plane_12_plaq>
+    <plane_03_plaq>0.994928065350166</plane_03_plaq>
+    <plane_13_plaq>0.994742272788207</plane_13_plaq>
+    <plane_23_plaq>0.994516339983</plane_23_plaq>
+    <link>0.379317698946318</link>
+    <pollp>
+      <elem>
+        <re>0.967222716500703</re>
+        <im>-0.00121316368572359</im>
+      </elem>
+      <elem>
+        <re>0.967032200040417</re>
+        <im>-0.00129616877538806</im>
+      </elem>
+      <elem>
+        <re>0.967467652031486</re>
+        <im>-0.00114548096521851</im>
+      </elem>
+      <elem>
+        <re>0.87953918043644</re>
+        <im>-0.0104402819566565</im>
+      </elem>
+    </pollp>
+  </Observables>
+  <InlineObservables>
+    <elem>
+      <PlaqDen>
+        <update_no>0</update_no>
+      </PlaqDen>
+    </elem>
+  </InlineObservables>
+</chroma>
