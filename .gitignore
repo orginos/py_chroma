@@ -2,3 +2,8 @@
 __pycache__/
 *.pyc
 .DS_Store
+*.out.xml
+*.candidate.xml
+*.h5
+fred*.xml
+chroma.out.xml
