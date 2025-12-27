@@ -4,6 +4,7 @@ __pycache__/
 .DS_Store
 *.out.xml
 *.candidate.xml
+!tests/chroma/schrfun/*.candidate.xml
 *.h5
 fred*.xml
 chroma.out.xml
