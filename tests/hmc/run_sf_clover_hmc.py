@@ -6,19 +6,20 @@ from py_chroma import finalize, initialize
 from py_chroma.hmc import (
     CloverAction,
     GaugeAction,
+    GaugeConfig,
     GaugeMonomial,
     GaugeState,
     Hamiltonian,
     HMCParams,
     HMCTrj,
     InvertParam,
-    MDIntegrator,
     Integrator,
     MCControl,
+    MDIntegrator,
     SchroedingerFermBC,
     SchroedingerGaugeBC,
     TwoFlavorEOPrecLogDetFermMonomial,
-    GaugeConfig,
+    run_hmc,
 )
 
 
@@ -49,7 +50,7 @@ def kappa_from_mass(mass):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run Nf=2 Clover HMC with Schroedinger BC via py_chroma (no XML input)."
+        description="Run Nf=2 Clover HMC with Schroedinger BC via py_chroma."
     )
     parser.add_argument("--beta", type=float, required=True, help="Gauge coupling beta")
     parser.add_argument("--mass", type=float, default=None, help="Bare mass m0")
@@ -103,7 +104,7 @@ def main():
         monomial_id="clover_2flav",
         invert_param=InvertParam(rsd_cg=args.rsd_cg, max_cg=args.max_cg),
         fermion_action=ferm_action,
-        predictor_name="ZERO_SOLUTION_4D_PREDICTOR",
+        predictor_name="ZERO_GUESS_4D_PREDICTOR",
     )
 
     monomial_gauge = GaugeMonomial(
@@ -153,8 +154,6 @@ def main():
 
     initialize()
     try:
-        from py_chroma.hmc import run_hmc
-
         run_hmc(params)
     finally:
         finalize()

@@ -172,11 +172,11 @@ class SEOPrecCloverAction:
 @dataclass
 class CloverAction:
     kappa: float
-    clov_coeff_r: float
-    clov_coeff_t: float
+    clov_coeff: Optional[float] = None
+    clov_coeff_r: Optional[float] = None
+    clov_coeff_t: Optional[float] = None
     aniso: Optional[AnisoParam] = None
     ferm_bc: Optional[object] = None
-    chrono_predictor_name: Optional[str] = None
 
     def to_element(self) -> ET.Element:
         elem = ET.Element("FermionAction")
@@ -185,15 +185,21 @@ class CloverAction:
         if self.aniso is not None:
             elem.append(self.aniso.to_element())
         if self.aniso is not None and self.aniso.anisoP:
+            if self.clov_coeff_r is None or self.clov_coeff_t is None:
+                raise ValueError("clov_coeff_r and clov_coeff_t are required for anisotropic Clover.")
             _add_text(elem, "clovCoeffR", self.clov_coeff_r)
             _add_text(elem, "clovCoeffT", self.clov_coeff_t)
         else:
-            _add_text(elem, "clovCoeff", self.clov_coeff_r)
+            if self.clov_coeff is not None:
+                _add_text(elem, "clovCoeff", self.clov_coeff)
+            else:
+                if self.clov_coeff_r is None:
+                    raise ValueError("clov_coeff is required for isotropic Clover.")
+                if self.clov_coeff_t is not None and self.clov_coeff_t != self.clov_coeff_r:
+                    raise ValueError("clov_coeff_r/clov_coeff_t mismatch for isotropic Clover.")
+                _add_text(elem, "clovCoeff", self.clov_coeff_r)
         if self.ferm_bc is not None:
             elem.append(self.ferm_bc.to_element())
-        if self.chrono_predictor_name is not None:
-            chrono = ET.SubElement(elem, "ChronologicalPredictor")
-            _add_text(chrono, "Name", self.chrono_predictor_name)
         return elem
 
 
@@ -357,12 +363,16 @@ class TwoFlavorEOPrecLogDetFermMonomial:
     monomial_id: str
     invert_param: InvertParam
     fermion_action: CloverAction
+    predictor_name: Optional[str] = None
 
     def to_element(self) -> ET.Element:
         elem = ET.Element("elem")
         _add_text(elem, "Name", "TWO_FLAVOR_EOPREC_LOGDET_FERM_MONOMIAL")
         elem.append(self.invert_param.to_element())
         elem.append(self.fermion_action.to_element())
+        if self.predictor_name is not None:
+            chrono = ET.SubElement(elem, "ChronologicalPredictor")
+            _add_text(chrono, "Name", self.predictor_name)
         named = ET.SubElement(elem, "NamedObject")
         _add_text(named, "monomial_id", self.monomial_id)
         return elem
