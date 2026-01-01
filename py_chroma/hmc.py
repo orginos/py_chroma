@@ -51,6 +51,35 @@ class GaugeBC:
 
 
 @dataclass
+class GaugeState:
+    name: str
+    gauge_bc: Optional[object] = None
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("GaugeState")
+        _add_text(elem, "Name", self.name)
+        if self.gauge_bc is not None:
+            elem.append(self.gauge_bc.to_element())
+        return elem
+
+
+@dataclass
+class SchroedingerGaugeBC:
+    name: str = "SCHROEDINGER_NONPERT_GAUGEBC"
+    schr_phi_mult: float = 1.0
+    loop_extent: int = 1
+    decay_dir: int = 3
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("GaugeBC")
+        _add_text(elem, "Name", self.name)
+        _add_text(elem, "SchrPhiMult", self.schr_phi_mult)
+        _add_text(elem, "loop_extent", self.loop_extent)
+        _add_text(elem, "decay_dir", self.decay_dir)
+        return elem
+
+
+@dataclass
 class FermionBC:
     ferm_bc: str = "SIMPLE_FERMBC"
     boundary: Sequence[int] = (1, 1, 1, -1)
@@ -59,6 +88,24 @@ class FermionBC:
         elem = ET.Element("FermionBC")
         _add_text(elem, "FermBC", self.ferm_bc)
         _add_space_list(elem, "boundary", self.boundary)
+        return elem
+
+
+@dataclass
+class SchroedingerFermBC:
+    ferm_bc: str = "SCHROEDINGER_NONPERT_FERMBC"
+    schr_phi_mult: float = 1.0
+    loop_extent: int = 1
+    decay_dir: int = 3
+    theta: Sequence[float] = (0.0, 0.0, 0.0)
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("FermionBC")
+        _add_text(elem, "FermBC", self.ferm_bc)
+        _add_text(elem, "SchrPhiMult", self.schr_phi_mult)
+        _add_text(elem, "loop_extent", self.loop_extent)
+        _add_text(elem, "decay_dir", self.decay_dir)
+        _add_space_list(elem, "theta", self.theta)
         return elem
 
 
@@ -119,6 +166,48 @@ class SEOPrecCloverAction:
             elem.append(self.ferm_state.to_element())
         if self.ferm_bc is not None:
             elem.append(self.ferm_bc.to_element())
+        return elem
+
+
+@dataclass
+class CloverAction:
+    kappa: float
+    clov_coeff_r: float
+    clov_coeff_t: float
+    aniso: Optional[AnisoParam] = None
+    ferm_bc: Optional[object] = None
+    chrono_predictor_name: Optional[str] = None
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("FermionAction")
+        _add_text(elem, "FermAct", "CLOVER")
+        _add_text(elem, "Kappa", self.kappa)
+        if self.aniso is not None:
+            elem.append(self.aniso.to_element())
+        if self.aniso is not None and self.aniso.anisoP:
+            _add_text(elem, "clovCoeffR", self.clov_coeff_r)
+            _add_text(elem, "clovCoeffT", self.clov_coeff_t)
+        else:
+            _add_text(elem, "clovCoeff", self.clov_coeff_r)
+        if self.ferm_bc is not None:
+            elem.append(self.ferm_bc.to_element())
+        if self.chrono_predictor_name is not None:
+            chrono = ET.SubElement(elem, "ChronologicalPredictor")
+            _add_text(chrono, "Name", self.chrono_predictor_name)
+        return elem
+
+
+@dataclass
+class InvertParam:
+    inv_type: str = "CG_INVERTER"
+    rsd_cg: float = 1.0e-7
+    max_cg: int = 1000
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("InvertParam")
+        _add_text(elem, "invType", self.inv_type)
+        _add_text(elem, "RsdCG", self.rsd_cg)
+        _add_text(elem, "MaxCG", self.max_cg)
         return elem
 
 
@@ -264,6 +353,22 @@ class TwoFlavorSEOPrecConstDetMultiHasenCancelFermMonomial:
 
 
 @dataclass
+class TwoFlavorEOPrecLogDetFermMonomial:
+    monomial_id: str
+    invert_param: InvertParam
+    fermion_action: CloverAction
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("elem")
+        _add_text(elem, "Name", "TWO_FLAVOR_EOPREC_LOGDET_FERM_MONOMIAL")
+        elem.append(self.invert_param.to_element())
+        elem.append(self.fermion_action.to_element())
+        named = ET.SubElement(elem, "NamedObject")
+        _add_text(named, "monomial_id", self.monomial_id)
+        return elem
+
+
+@dataclass
 class InlineMeasurement:
     name: str
     frequency: int
@@ -343,6 +448,7 @@ class HMCTrj:
             NFlavorLogDetDiagFermMonomial,
             TwoFlavorSEOPrecConstDetRatioConvConvMultiHasenFermMonomial,
             TwoFlavorSEOPrecConstDetMultiHasenCancelFermMonomial,
+            TwoFlavorEOPrecLogDetFermMonomial,
         ]
     ]
     hamiltonian: Hamiltonian
@@ -364,6 +470,7 @@ class GaugeConfig:
     cfg_type: str
     cfg_file: str = "DUMMY"
     parallel_io: Optional[bool] = None
+    gauge_state: Optional[GaugeState] = None
 
     def to_element(self) -> ET.Element:
         elem = ET.Element("Cfg")
@@ -371,6 +478,8 @@ class GaugeConfig:
         _add_text(elem, "cfg_file", self.cfg_file)
         if self.parallel_io is not None:
             _add_text(elem, "parallel_io", self.parallel_io)
+        if self.gauge_state is not None:
+            elem.append(self.gauge_state.to_element())
         return elem
 
 
