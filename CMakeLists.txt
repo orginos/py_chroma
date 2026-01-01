@@ -54,6 +54,7 @@ separate_arguments(QDP_LIBS_LIST NATIVE_COMMAND "${QDP_LIBS}")
 
 add_library(pychroma SHARED
   src/pychroma_core.cpp
+  src/pychroma_hmc.cpp
   src/pychroma_inline.cpp
   src/pychroma_rect_wloops.cpp
   src/pychroma_state.cpp

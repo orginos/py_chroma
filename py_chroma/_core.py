@@ -71,6 +71,9 @@ _lib.pychroma_run_inline_xml.restype = ctypes.c_int
 _lib.pychroma_run_plaquette.argtypes = [ctypes.c_ulong, ctypes.c_ulong]
 _lib.pychroma_run_plaquette.restype = ctypes.c_int
 
+_lib.pychroma_run_hmc_xml.argtypes = [ctypes.c_char_p]
+_lib.pychroma_run_hmc_xml.restype = ctypes.c_int
+
 _lib.pychroma_last_error.argtypes = []
 _lib.pychroma_last_error.restype = ctypes.c_char_p
 
@@ -165,3 +168,9 @@ def rect_wilson_loops(t_dir, z_dir, l_max, r_max, out_path):
 
 def run_plaquette(update_no=0, frequency=1):
     _check(_lib.pychroma_run_plaquette(int(update_no), int(frequency)))
+
+
+def run_hmc_xml(params_xml):
+    if not isinstance(params_xml, str):
+        raise PyChromaError("params_xml must be a string")
+    _check(_lib.pychroma_run_hmc_xml(params_xml.encode("utf-8")))

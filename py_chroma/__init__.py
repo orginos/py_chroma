@@ -11,6 +11,7 @@ from ._core import (
     rect_wilson_loops,
     run_inline_xml,
     run_plaquette,
+    run_hmc_xml,
 )
 
 __all__ = [
@@ -26,4 +27,5 @@ __all__ = [
     "rect_wilson_loops",
     "run_inline_xml",
     "run_plaquette",
+    "run_hmc_xml",
 ]
