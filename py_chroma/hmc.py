@@ -110,6 +110,52 @@ class SchroedingerFermBC:
 
 
 @dataclass
+class ChronologicalPredictor:
+    name: str
+    params: Optional[Union[dict, Sequence[tuple]]] = None
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("ChronologicalPredictor")
+        _add_text(elem, "Name", self.name)
+        if self.params:
+            if isinstance(self.params, dict):
+                items = self.params.items()
+            else:
+                items = self.params
+            for key, value in items:
+                _add_text(elem, str(key), value)
+        return elem
+
+
+def predictor_zero_guess() -> ChronologicalPredictor:
+    return ChronologicalPredictor(name="ZERO_GUESS_4D_PREDICTOR")
+
+
+def predictor_last_solution() -> ChronologicalPredictor:
+    return ChronologicalPredictor(name="LAST_SOLUTION_4D_PREDICTOR")
+
+
+def predictor_linear_extrapolation() -> ChronologicalPredictor:
+    return ChronologicalPredictor(name="LINEAR_EXTRAPOLATION_4D_PREDICTOR")
+
+
+def predictor_mre(max_chrono: int = 1) -> ChronologicalPredictor:
+    return ChronologicalPredictor(
+        name="MINIMAL_RESIDUAL_EXTRAPOLATION_4D_PREDICTOR",
+        params={"MaxChrono": max_chrono},
+    )
+
+
+def predictor_mre_initcg(
+    max_chrono: int = 1, max_evec: int = 1, opt_eigen_id: str = ""
+) -> ChronologicalPredictor:
+    return ChronologicalPredictor(
+        name="MRE_INITCG_4D_PREDICTOR",
+        params={"MaxChrono": max_chrono, "MaxEvec": max_evec, "opt_eigen_id": opt_eigen_id},
+    )
+
+
+@dataclass
 class AnisoParam:
     anisoP: bool = False
     t_dir: int = 3
@@ -364,15 +410,18 @@ class TwoFlavorEOPrecLogDetFermMonomial:
     invert_param: InvertParam
     fermion_action: CloverAction
     predictor_name: Optional[str] = None
+    predictor: Optional[ChronologicalPredictor] = None
 
     def to_element(self) -> ET.Element:
         elem = ET.Element("elem")
         _add_text(elem, "Name", "TWO_FLAVOR_EOPREC_LOGDET_FERM_MONOMIAL")
         elem.append(self.invert_param.to_element())
         elem.append(self.fermion_action.to_element())
-        if self.predictor_name is not None:
-            chrono = ET.SubElement(elem, "ChronologicalPredictor")
-            _add_text(chrono, "Name", self.predictor_name)
+        predictor = self.predictor
+        if predictor is None and self.predictor_name is not None:
+            predictor = ChronologicalPredictor(name=self.predictor_name)
+        if predictor is not None:
+            elem.append(predictor.to_element())
         named = ET.SubElement(elem, "NamedObject")
         _add_text(named, "monomial_id", self.monomial_id)
         return elem
