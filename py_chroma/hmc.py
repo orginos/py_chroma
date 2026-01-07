@@ -192,6 +192,21 @@ class FermState:
 
 
 @dataclass
+class WilsonAction:
+    kappa: float
+    ferm_bc: Optional[object] = None
+    ferm_act: str = "WILSON"
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("FermionAction")
+        _add_text(elem, "FermAct", self.ferm_act)
+        _add_text(elem, "Kappa", self.kappa)
+        if self.ferm_bc is not None:
+            elem.append(self.ferm_bc.to_element())
+        return elem
+
+
+@dataclass
 class SEOPrecCloverAction:
     mass: float
     clov_coeff_r: float
@@ -428,6 +443,29 @@ class TwoFlavorEOPrecLogDetFermMonomial:
 
 
 @dataclass
+class TwoFlavorEOPrecConstDetFermMonomial:
+    monomial_id: str
+    invert_param: InvertParam
+    fermion_action: Union[WilsonAction, CloverAction]
+    predictor_name: Optional[str] = None
+    predictor: Optional[ChronologicalPredictor] = None
+
+    def to_element(self) -> ET.Element:
+        elem = ET.Element("elem")
+        _add_text(elem, "Name", "TWO_FLAVOR_EOPREC_CONSTDET_FERM_MONOMIAL")
+        elem.append(self.invert_param.to_element())
+        elem.append(self.fermion_action.to_element())
+        predictor = self.predictor
+        if predictor is None and self.predictor_name is not None:
+            predictor = ChronologicalPredictor(name=self.predictor_name)
+        if predictor is not None:
+            elem.append(predictor.to_element())
+        named = ET.SubElement(elem, "NamedObject")
+        _add_text(named, "monomial_id", self.monomial_id)
+        return elem
+
+
+@dataclass
 class InlineMeasurement:
     name: str
     frequency: int
@@ -508,6 +546,7 @@ class HMCTrj:
             TwoFlavorSEOPrecConstDetRatioConvConvMultiHasenFermMonomial,
             TwoFlavorSEOPrecConstDetMultiHasenCancelFermMonomial,
             TwoFlavorEOPrecLogDetFermMonomial,
+            TwoFlavorEOPrecConstDetFermMonomial,
         ]
     ]
     hamiltonian: Hamiltonian

@@ -19,7 +19,14 @@ def _lib_name():
 
 def _default_lib_path():
     root = Path(__file__).resolve().parents[2]
-    return root / "build" / _lib_name()
+    candidates = [
+        root / "build" / _lib_name(),
+        root / "lib" / _lib_name(),
+    ]
+    for path in candidates:
+        if path.exists():
+            return path
+    return candidates[0]
 
 
 def _load_lib():
@@ -73,6 +80,8 @@ _lib.pychroma_run_plaquette.restype = ctypes.c_int
 
 _lib.pychroma_run_hmc_xml.argtypes = [ctypes.c_char_p]
 _lib.pychroma_run_hmc_xml.restype = ctypes.c_int
+_lib.pychroma_run_smd_xml.argtypes = [ctypes.c_char_p]
+_lib.pychroma_run_smd_xml.restype = ctypes.c_int
 
 _lib.pychroma_last_error.argtypes = []
 _lib.pychroma_last_error.restype = ctypes.c_char_p
@@ -174,3 +183,9 @@ def run_hmc_xml(params_xml):
     if not isinstance(params_xml, str):
         raise PyChromaError("params_xml must be a string")
     _check(_lib.pychroma_run_hmc_xml(params_xml.encode("utf-8")))
+
+
+def run_smd_xml(params_xml):
+    if not isinstance(params_xml, str):
+        raise PyChromaError("params_xml must be a string")
+    _check(_lib.pychroma_run_smd_xml(params_xml.encode("utf-8")))

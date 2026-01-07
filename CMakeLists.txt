@@ -57,12 +57,14 @@ add_library(pychroma SHARED
   src/pychroma_hmc.cpp
   src/pychroma_inline.cpp
   src/pychroma_rect_wloops.cpp
+  src/pychroma_smd.cpp
   src/pychroma_state.cpp
   src/pychroma_util.cpp
 )
 
 target_include_directories(pychroma PRIVATE
   "${CHROMA_PREFIX}/include"
+  "${CMAKE_CURRENT_LIST_DIR}/../chroma/lib"
   ${HDF5_INCLUDE_DIRS}
 )
 
@@ -94,4 +96,7 @@ install(TARGETS pychroma
 )
 install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/py_chroma"
   DESTINATION python
+)
+install(PROGRAMS "${CMAKE_CURRENT_LIST_DIR}/scripts/pychroma_env.sh"
+  DESTINATION bin
 )

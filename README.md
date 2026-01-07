@@ -20,6 +20,7 @@ The shared library will be written to `build/libpychroma.dylib` on macOS.
 
 ```
 export PYCHROMA_LIB=/Users/kostas/Work/qcd_codes/chromaform/src/py_chroma/build/libpychroma.dylib
+export PYTHONPATH=/Users/kostas/Work/qcd_codes/chromaform/src/py_chroma
 python - <<'PY'
 from py_chroma import (
     initialize, finalize, register_inline, set_lattice, set_rng_seed,
@@ -41,6 +42,14 @@ run_inline_xml(inline_xml)
 run_plaquette(update_no=0, frequency=1)
 finalize()
 PY
+```
+
+For installed builds via `chromaform`, use the helper to set both `PYCHROMA_LIB`
+and `PYTHONPATH`:
+
+```
+source /Users/kostas/Work/qcd_codes/chromaform/install/py_chroma-chroma-qdpxx-double-nd4-py_qdp/bin/pychroma_env.sh
+python3 /Users/kostas/Work/qcd_codes/chromaform/src/py_chroma/tests/smd/run_prec_wilson_no_xml.py --beta 5.7 --mass 0.01
 ```
 
 Next step is to replace XML strings with Python-side parameter objects that

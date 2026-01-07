@@ -18,6 +18,7 @@ int pychroma_run_inline_xml(const char* inline_xml);
 int pychroma_run_plaquette(unsigned long update_no, unsigned long frequency);
 int pychroma_rect_wloops(int t_dir, int z_dir, int L_max, int R_max, const char* out_path);
 int pychroma_run_hmc_xml(const char* params_xml);
+int pychroma_run_smd_xml(const char* params_xml);
 const char* pychroma_last_error();
 
 #ifdef __cplusplus

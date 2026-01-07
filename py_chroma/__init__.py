@@ -12,6 +12,7 @@ from ._core import (
     run_inline_xml,
     run_plaquette,
     run_hmc_xml,
+    run_smd_xml,
 )
 
 __all__ = [
@@ -28,4 +29,5 @@ __all__ = [
     "run_inline_xml",
     "run_plaquette",
     "run_hmc_xml",
+    "run_smd_xml",
 ]
