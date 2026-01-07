@@ -1,18 +1,18 @@
-from ._core import (
-    initialize,
+from .runtime import (
     finalize,
-    register_inline,
+    initialize,
     random_gauge_transform,
+    rect_wilson_loops,
+    register_inline,
+    run_hmc_xml,
+    run_inline_xml,
+    run_plaquette,
+    run_smd_xml,
+    set_gauge,
+    set_input_xml,
     set_lattice,
     set_rng_seed,
     set_rng_seed_xml,
-    set_gauge,
-    set_input_xml,
-    rect_wilson_loops,
-    run_inline_xml,
-    run_plaquette,
-    run_hmc_xml,
-    run_smd_xml,
 )
 
 __all__ = [

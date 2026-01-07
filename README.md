@@ -52,5 +52,13 @@ source /Users/kostas/Work/qcd_codes/chromaform/install/py_chroma-chroma-qdpxx-do
 python3 /Users/kostas/Work/qcd_codes/chromaform/src/py_chroma/tests/smd/run_prec_wilson_no_xml.py --beta 5.7 --mass 0.01
 ```
 
+You can also have `chromaform` write an environment file:
+
+```
+./chromaform --update py_chroma --env=env_pychroma.sh
+source env_pychroma.sh
+python3 /Users/kostas/Work/qcd_codes/chromaform/src/py_chroma/tests/smd/run_prec_wilson_no_xml.py --beta 5.7 --mass 0.01
+```
+
 Next step is to replace XML strings with Python-side parameter objects that
 map directly onto Chroma C++ param structs.
